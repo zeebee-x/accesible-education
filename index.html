@@ -80,7 +80,7 @@
       btn.addEventListener("click", () => {
         const group = groupSelect.value;
         const user = btn.dataset.user;
-        const sampleMessages = ["Hi everyone!", "I have a question.", "Can someone explain this?", "Let's study together!", "I just finished an exercise."];
+        const sampleMessages = ["Hi everyone!", "I have a question.", "Can someone explain this?", "Can someone help me solve this?", "I just finished an exercise."];
         const text = sampleMessages[Math.floor(Math.random() * sampleMessages.length)];
         groups[group].push({ user, text });
         renderMessages(group);

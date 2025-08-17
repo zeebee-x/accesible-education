@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Study Groups - Hackathon Demo</title>
+  <style>
+    body { font-family: Arial; background: #f4f4f9; padding: 20px; }
+    h1 { text-align: center; }
+    #chat-container { max-width: 600px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    #messages { border: 1px solid #ddd; height: 300px; overflow-y: auto; padding: 10px; margin-bottom: 10px; background: #fafafa; }
+    .me { background: #d1f7c4; text-align: right; padding: 6px; border-radius: 6px; margin-bottom: 5px; }
+    .other { background: #e3e3e3; text-align: left; padding: 6px; border-radius: 6px; margin-bottom: 5px; }
+    #input-area { display: flex; gap: 10px; margin-bottom: 10px; }
+    #input-area input { flex: 1; padding: 10px; }
+    #input-area button { padding: 10px 20px; }
+    #simulate-users { display: flex; gap: 10px; margin-bottom: 10px; }
+    #simulate-users button { padding: 6px 12px; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <h1>Study Groups - Hackathon Demo</h1>
+  <div id="chat-container">
+
+    <div id="simulate-users">
+      <button data-user="Alice">Simulate Alice</button>
+      <button data-user="Bob">Simulate Bob</button>
+      <button data-user="Charlie">Simulate Charlie</button>
+    </div>
+
+    <label for="group-select">Select a group:</label>
+    <select id="group-select">
+      <option value="math">Math</option>
+      <option value="science">Science</option>
+      <option value="coding">Coding</option>
+    </select>
+
+    <div id="messages"></div>
+
+    <div id="input-area">
+      <input type="text" id="message-input" placeholder="Type a message...">
+      <button id="send-btn">Send</button>
+    </div>
+  </div>
+
+  <script>
+    let username = prompt("Enter your name:") || "You";
+    let groups = { math: [], science: [], coding: [] };
+
+    const groupSelect = document.getElementById("group-select");
+    const messagesDiv = document.getElementById("messages");
+    const input = document.getElementById("message-input");
+    const sendBtn = document.getElementById("send-btn");
+    const simulateButtons = document.querySelectorAll("#simulate-users button");
+
+    function renderMessages(group) {
+      messagesDiv.innerHTML = "";
+      groups[group].forEach(msg => {
+        const div = document.createElement("div");
+        div.className = msg.user === username ? "me" : "other";
+        div.textContent = msg.user + ": " + msg.text;
+        messagesDiv.appendChild(div);
+      });
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function sendMessage(user) {
+      const text = input.value.trim();
+      if (!text) return;
+      const group = groupSelect.value;
+      groups[group].push({ user: user || username, text });
+      input.value = "";
+      renderMessages(group);
+    }
+
+    groupSelect.addEventListener("change", () => renderMessages(groupSelect.value));
+    sendBtn.addEventListener("click", () => sendMessage());
+    input.addEventListener("keydown", e => { if(e.key === 'Enter') sendMessage(); });
+
+    simulateButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const group = groupSelect.value;
+        const user = btn.dataset.user;
+        const sampleMessages = ["Hi everyone!", "I have a question.", "Can someone explain this?", "Let's study together!", "I just finished an exercise."];
+        const text = sampleMessages[Math.floor(Math.random() * sampleMessages.length)];
+        groups[group].push({ user, text });
+        renderMessages(group);
+      });
+    });
+
+    renderMessages(groupSelect.value);
+  </script>
+</body>
+</html>
